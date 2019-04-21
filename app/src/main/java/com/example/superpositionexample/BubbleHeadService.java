@@ -40,7 +40,8 @@ public class BubbleHeadService extends Service implements Runnable{
     TimerPermissionV2 time;
     Thread t;
     boolean running=true;
-
+    Class[] games={Game1.class,Juego2.class,Juego3.class,Game1.class};
+    int aux=0;
     public BubbleHeadService() {
     }
 
@@ -55,9 +56,9 @@ public class BubbleHeadService extends Service implements Runnable{
     public void onCreate() {
         super.onCreate();
         //Crear DB
-        //setExerciceNum();
+        setExerciceNum();
         updateExerciceNum(2);
-        getExerciceNum();
+        aux=getExerciceNum();
         //Crear timer
         time= new TimerPermissionV2();
         time.setTimeLimit(10);
@@ -65,6 +66,7 @@ public class BubbleHeadService extends Service implements Runnable{
 
         t= new Thread(this);
         t.start();
+        //Toast.makeText(this, "mames", Toast.LENGTH_SHORT).show();
 
     }
     public void updateExerciceNum(int num)
@@ -174,29 +176,29 @@ public class BubbleHeadService extends Service implements Runnable{
                 t.sleep(500);
                 if (actualExcerciceNum<=0)
                 {
-                    time.setTimeLimit(10);
+                    time.setTimeLimit(5);
                     time.restart();
                     updateExerciceNum(2);
+                    aux= getExerciceNum();
                 }
                 t.sleep(500);
+
                 actualExcerciceNum= getExerciceNum();
-                if(time.isTimeFinish() && !(getActivity()+"").equals("superpositionexample") && actualExcerciceNum>0)
+
+                if(time.isTimeFinish() && aux==actualExcerciceNum && actualExcerciceNum>0)
                 {
-                    Intent intent = new Intent(BubbleHeadService.this, Game1.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+                    double b=Math.random();
+                    int a=(int) (b*4);
+                    if(a<4 && a>0)
+                    {
+                        Intent intent = new Intent(BubbleHeadService.this, games[a]);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        aux--;
+                    }
 
                 }
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
