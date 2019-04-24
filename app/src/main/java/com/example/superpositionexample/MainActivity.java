@@ -17,8 +17,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
     public static int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 5469;
 
-    private TextView contdowntxt;
-    private Button contDownbtn;
 
     private CountDownTimer time;
     private long timeLeft = 3000;
@@ -30,8 +28,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //Timer
-        contDownbtn = findViewById(R.id.btnTimer);
-        contdowntxt = findViewById(R.id.txtTimer);
+
 
         //Bubble
 
@@ -42,11 +39,11 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, CODE_DRAW_OVER_OTHER_APP_PERMISSION);
             Toast.makeText(this, "if weeeee", Toast.LENGTH_SHORT).show();
         } else {
-            initializeView();
+            //initializeView();
         }
     }
 
-    private void initializeView() {
+    /*private void initializeView() {
         findViewById(R.id.bubble_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
+    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -62,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (Settings.canDrawOverlays(this)) {
-                    initializeView();
+                    //initializeView();
                 } else {
                     Toast.makeText(this,
                             "El permiso para posicionar elementos sobre otras aplicaciones no está disponible. Cerrando aplicación",
