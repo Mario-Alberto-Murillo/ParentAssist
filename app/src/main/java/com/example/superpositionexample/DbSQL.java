@@ -14,7 +14,7 @@ public class DbSQL extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        db.execSQL("CREATE TABLE config (id INTEGER, totalgamestoplay INTEGER)");
+        db.execSQL("CREATE TABLE config (id INTEGER, totalgamestoplay INTEGER, time INTEGER)");
     }
 
     @Override

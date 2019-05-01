@@ -90,8 +90,8 @@ public class BubbleHeadService extends Service implements Runnable{
         DbSQL conn = new DbSQL(this, "db_config", null, 1);
         SQLiteDatabase db = conn.getWritableDatabase();
 
-        String insert = "INSERT INTO "+ Utils.TABLE_CONFIG+" ( "+Utils.FIELD_ID+","+Utils.FIELD_TOTALGAMESTOPLAY+") " +
-                "VALUES "+"("+1+","+2+")";
+        String insert = "INSERT INTO "+ Utils.TABLE_CONFIG+" ( "+Utils.FIELD_ID+","+Utils.FIELD_TOTALGAMESTOPLAY+ ","+Utils.FIELD_TIME +") " +
+                "VALUES "+"("+1+","+2+","+5+")";
 
         db.execSQL(insert);
         db.close();
