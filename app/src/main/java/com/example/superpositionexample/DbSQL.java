@@ -14,11 +14,11 @@ public class DbSQL extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        db.execSQL("CREATE TABLE config (id INTEGER, totalgamestoplay INTEGER, time INTEGER)");
+        db.execSQL("CREATE TABLE config (id int, totalgamestoplay TEXT, time TEXT, user TEXT)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    db.execSQL("DROP TABLE IF EXISTS config");
+    //db.execSQL("DROP TABLE IF EXISTS config");
     }
 }

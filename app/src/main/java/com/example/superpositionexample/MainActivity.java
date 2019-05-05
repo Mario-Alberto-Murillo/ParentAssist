@@ -1,6 +1,10 @@
 package com.example.superpositionexample;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.CountDownTimer;
@@ -15,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.superpositionexample.utilities.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -54,19 +59,17 @@ public class MainActivity extends AppCompatActivity {
         txtUsr= findViewById(R.id.txtUrs);
         txtPass= findViewById(R.id.txtPass);
 
-        //ref.setValue("kk");
-        
+        //Database
+        //insert();
+        //update();
+        //readDB();
+        //Toast.makeText(this, new GetUserSQLite().getUsr()+"si se armo ", Toast.LENGTH_SHORT).show();
+        if(readDB()==0)
+        {
+            insert();
+        }
         //Bubble
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
-
-            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:" + getPackageName()));
-            startActivityForResult(intent, CODE_DRAW_OVER_OTHER_APP_PERMISSION);
-
-        } else {
-            //initializeView();
-        }
     }
 
     public void logIn(View view)
@@ -87,7 +90,9 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(MainActivity.this, "Auth corect", Toast.LENGTH_SHORT).show();
+
+                            Toast.makeText(MainActivity.this, "Auth corect: "+user.getEmail(), Toast.LENGTH_SHORT).show();
+                            update("1","1","5",txtUsr.getText().toString().replace(".",""));
 
                             Intent intent = new Intent(MainActivity.this, SelectChild.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -104,7 +109,122 @@ public class MainActivity extends AppCompatActivity {
                 });
 
     }
+    public void insert()
+    {
+        DbSQL conn= new DbSQL(this,"db_con",null,1);
+        SQLiteDatabase db = conn.getWritableDatabase();
 
+        ContentValues content = new ContentValues();
+        content.put("id","1");
+        content.put("totalgamestoplay","5");
+        content.put("time","6");
+        content.put("user","mario2.0");
+
+        try {
+            db.insert("config",null,content);
+        }catch (SQLException sqle)
+        {
+            Toast.makeText(this, "No se pudo ingresar el campo", Toast.LENGTH_SHORT).show();
+        }
+
+        db.close();
+        Toast.makeText(this, "Insert", Toast.LENGTH_LONG).show();
+    }
+    public void update(String id, String games, String time, String user)
+    {
+        DbSQL conn= new DbSQL(this,"db_con",null,1);
+        SQLiteDatabase db = conn.getWritableDatabase();
+
+        ContentValues content = new ContentValues();
+        content.put("id",id);
+        content.put("totalgamestoplay",games);
+        content.put("time",time);
+        content.put("user",user);
+
+        try {
+            db.update("config",content,"id=1",null);
+        }catch (SQLException sqle)
+        {
+            Toast.makeText(this, "No se pudo ingresar el campo", Toast.LENGTH_SHORT).show();
+        }
+
+        db.close();
+        Toast.makeText(this, "Todo bien todo correcto", Toast.LENGTH_LONG).show();
+    }
+    public int readDB()
+    {
+        try
+        {
+            DbSQL conn= new DbSQL(this,"db_con",null,1);
+            SQLiteDatabase db = conn.getWritableDatabase();
+
+            Cursor row = db.rawQuery
+                    ("select * from config where id = 1 ",null);
+
+            if(row.moveToFirst())
+            {
+                Toast.makeText(this, row.getString(3), Toast.LENGTH_SHORT).show();
+            }
+            return 1;
+        }
+        catch(Exception e)
+        {
+            return 0;
+        }
+
+
+    }
+    public void updateExerciceNum(int num)
+    {
+        if(num>0)
+        {
+            DbSQL conn = new DbSQL(this, "db_config", null, 1);
+            SQLiteDatabase db = conn.getWritableDatabase();
+
+            String[] pram={"1"};
+            ContentValues values= new ContentValues();
+            values.put(Utils.FIELD_TOTALGAMESTOPLAY,num-1);
+
+            db.update(Utils.TABLE_CONFIG,values,Utils.FIELD_ID+"=?",pram);
+            db.close();
+        }
+
+    }
+    private void setExerciceNum()
+    {
+        DbSQL conn = new DbSQL(this, "db_config", null, 1);
+        SQLiteDatabase db = conn.getWritableDatabase();
+        //db.execSQL("DROP TABLE IF EXIST");
+        String insert = "INSERT INTO "+ Utils.TABLE_CONFIG+" ( "+Utils.FIELD_ID+","+Utils.FIELD_TOTALGAMESTOPLAY+ ","+Utils.FIELD_TIME +","+Utils.FIELD_USER+") " +
+                "VALUES "+"(a,b,c,d)";
+
+        db.execSQL(insert);
+        db.close();
+    }
+    private int getExerciceNum()
+    {
+        DbSQL conn = new DbSQL(this, "db_config", null, 1);
+        SQLiteDatabase db = conn.getReadableDatabase();
+
+        String[] pram={"1"};
+        String[] fields={Utils.FIELD_TOTALGAMESTOPLAY,Utils.FIELD_TOTALGAMESTOPLAY};
+
+        try
+        {
+            Cursor cursor=db.query(Utils.TABLE_CONFIG, fields, Utils.FIELD_ID+"=?",pram,null,null,null);
+            cursor.moveToFirst();
+            Toast.makeText(this, "cantidad de ejercicios :"+cursor.getString(0), Toast.LENGTH_LONG).show();
+            int result = cursor.getInt(0);
+
+            cursor.close();
+            return result;
+        }
+        catch(Exception e)
+        {
+            Toast.makeText(this, "No se encontro campo id=1", Toast.LENGTH_LONG).show();
+            return 0;
+        }
+    }
     public void checkDB()
     {
         eventListener = new ValueEventListener() {

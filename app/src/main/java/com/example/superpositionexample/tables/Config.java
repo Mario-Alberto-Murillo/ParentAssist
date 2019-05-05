@@ -1,27 +1,47 @@
 package com.example.superpositionexample.tables;
 
 public class Config {
-    private Integer id;
-    private Integer total;
+    private String id;
+    private String total;
+    private String time;
+    private String user;
 
-    public Config(Integer id, Integer totalGamesToPlay) {
+    public Config(String id, String totalGamesToPlay, String time, String user) {
         this.id = id;
         this.total = totalGamesToPlay;
+        this.time=time;
+        this.user=user;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Integer getTotalGamesToPlay() {
+    public String getTotal() {
         return total;
     }
 
-    public void setTotalGamesToPlay(Integer totalGamesToPlay) {
-        this.total = totalGamesToPlay;
+    public void setTotal(String total) {
+        this.total = total;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 }
