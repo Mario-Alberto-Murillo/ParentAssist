@@ -39,6 +39,7 @@ public class Juego3 extends AppCompatActivity {
         if (ban2==1)
         {
             int num=readDB();
+            Toast.makeText(this,(num-1)+" restantes", Toast.LENGTH_SHORT).show();
             update(null,(num-1)+"",null,null);
            /* int numExcercice=readExerciceNum();
             updateExerciceNum(numExcercice);*/
@@ -55,6 +56,7 @@ public class Juego3 extends AppCompatActivity {
         if(ban1==1)
         {
             int num=readDB();
+            Toast.makeText(this,(num-1)+" restantes", Toast.LENGTH_SHORT).show();
             update(null,(num-1)+"",null,null);
            /* int numExcercice=readExerciceNum();
             updateExerciceNum(numExcercice);*/
