@@ -69,15 +69,15 @@ public class SelectChild extends Activity {
 
         checkDB();
 
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
 
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                     Uri.parse("package:" + getPackageName()));
             startActivityForResult(intent, CODE_DRAW_OVER_OTHER_APP_PERMISSION);
 
         } else {
-            initializeView();
-        }*/
+            //initializeView();
+        }
 
     }
     /*private void initializeView() {

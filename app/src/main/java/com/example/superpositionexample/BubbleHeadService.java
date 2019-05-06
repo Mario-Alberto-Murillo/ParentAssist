@@ -67,7 +67,7 @@ public class BubbleHeadService extends Service implements Runnable{
 
         //Crear timer
         time= new TimerPermissionV2();
-        time.setTimeLimit(10);
+        time.setTimeLimit(timePerGame);
         time.start();
 
         t= new Thread(this);

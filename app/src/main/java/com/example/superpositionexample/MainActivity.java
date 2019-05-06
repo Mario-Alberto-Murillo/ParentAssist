@@ -64,12 +64,22 @@ public class MainActivity extends AppCompatActivity {
         //update();
         //readDB();
         //Toast.makeText(this, new GetUserSQLite().getUsr()+"si se armo ", Toast.LENGTH_SHORT).show();
-        //insert();
 
+
+        /*DbSQL conn= new DbSQL(this,"db_con",null,1);
+        SQLiteDatabase db = conn.getWritableDatabase();
+
+        db.execSQL("drop table config");
+
+        db.close();
+        Toast.makeText(this, "Insert", Toast.LENGTH_LONG).show();*/
+
+        //insert();
         if(readDB()==0)
         {
             insert();
         }
+        readDB();
         //Bubble
 
     }
@@ -125,13 +135,14 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             db.insert("config",null,content);
+            Toast.makeText(this, "Insert", Toast.LENGTH_LONG).show();
         }catch (SQLException sqle)
         {
             Toast.makeText(this, "No se pudo ingresar el campo", Toast.LENGTH_SHORT).show();
         }
 
         db.close();
-        Toast.makeText(this, "Insert", Toast.LENGTH_LONG).show();
+
     }
     public void update(String id, String games, String time, String user)
     {
@@ -167,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
             if(row.moveToFirst())
             {
-                Toast.makeText(this, row.getString(4)+"->actual user", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, row.getString(3)+"->actual user", Toast.LENGTH_SHORT).show();
             }
             return 1;
         }
