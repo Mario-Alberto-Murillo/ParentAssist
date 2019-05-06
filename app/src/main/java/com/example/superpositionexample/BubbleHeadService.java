@@ -42,6 +42,10 @@ public class BubbleHeadService extends Service implements Runnable{
     boolean running=true;
     Class[] games={Game1.class,Juego2.class,Juego3.class,Game1.class};
     int aux=0;
+    int timePerGame=10;
+    int actualExcerciceNum=0;
+    int totalGames=0;
+
     public BubbleHeadService() {
     }
 
@@ -56,9 +60,11 @@ public class BubbleHeadService extends Service implements Runnable{
     public void onCreate() {
         super.onCreate();
         //Crear DB
-        setExerciceNum();
+        /*setExerciceNum();
         updateExerciceNum(2);
-        aux=getExerciceNum();
+        aux=getExerciceNum();*/
+        aux=readDB();
+
         //Crear timer
         time= new TimerPermissionV2();
         time.setTimeLimit(10);
@@ -68,6 +74,30 @@ public class BubbleHeadService extends Service implements Runnable{
         t.start();
         //Toast.makeText(this, "mames", Toast.LENGTH_SHORT).show();
 
+    }
+    public int readDB()
+    {
+        try
+        {
+            DbSQL conn= new DbSQL(this,"db_con",null,1);
+            SQLiteDatabase db = conn.getWritableDatabase();
+
+            Cursor row = db.rawQuery
+                    ("select * from config where id = 1 ",null);
+
+            if(row.moveToFirst())
+            {
+               totalGames = Integer.valueOf( row.getString(1) );
+               timePerGame = Integer.valueOf( row.getString(2) );
+               actualExcerciceNum = Integer.valueOf( row.getString(4) );
+            }
+
+            return 1;
+        }
+        catch(Exception e)
+        {
+            return 0;
+        }
     }
     public void updateExerciceNum(int num)
     {
@@ -168,7 +198,7 @@ public class BubbleHeadService extends Service implements Runnable{
 
    @Override
     public void run() {
-    int actualExcerciceNum=0;
+
         while(running==true)
         {
 
@@ -176,15 +206,20 @@ public class BubbleHeadService extends Service implements Runnable{
                 t.sleep(500);
                 if (actualExcerciceNum<=0)
                 {
-                    time.setTimeLimit(5);
+                    time.setTimeLimit(timePerGame);
+                    time.restart();
+                    readDB();
+                    aux=totalGames;
+                    /*time.setTimeLimit(5);
                     time.restart();
                     updateExerciceNum(2);
-                    aux= getExerciceNum();
+
+                    aux= getExerciceNum();*/
                 }
                 t.sleep(500);
 
-                actualExcerciceNum= getExerciceNum();
-
+               // actualExcerciceNum= getExerciceNum();
+                readDB();
                 if(time.isTimeFinish() && aux==actualExcerciceNum && actualExcerciceNum>0)
                 {
                     double b=Math.random();

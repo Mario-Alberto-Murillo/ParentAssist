@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
         //update();
         //readDB();
         //Toast.makeText(this, new GetUserSQLite().getUsr()+"si se armo ", Toast.LENGTH_SHORT).show();
+        //insert();
+
         if(readDB()==0)
         {
             insert();
@@ -119,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         content.put("totalgamestoplay","5");
         content.put("time","6");
         content.put("user","mario2.0");
+        content.put("remainGames","5");
 
         try {
             db.insert("config",null,content);
@@ -140,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
         content.put("totalgamestoplay",games);
         content.put("time",time);
         content.put("user",user);
+        content.put("remainGames",games);
 
         try {
             db.update("config",content,"id=1",null);
@@ -163,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
 
             if(row.moveToFirst())
             {
-                Toast.makeText(this, row.getString(3), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, row.getString(4)+"->actual user", Toast.LENGTH_SHORT).show();
             }
             return 1;
         }
