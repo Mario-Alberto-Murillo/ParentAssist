@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         db.close();
         Toast.makeText(this, "Insert", Toast.LENGTH_LONG).show();*/
 
-        //insert();
+        insert();
         if(readDB()==0)
         {
             insert();
@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
                             Intent intent = new Intent(MainActivity.this, SelectChild.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
+                            finish();
 
                         } else {
                             // If sign in fails, display a message to the user.
