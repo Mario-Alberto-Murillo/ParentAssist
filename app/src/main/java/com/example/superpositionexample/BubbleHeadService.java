@@ -3,15 +3,10 @@ package com.example.superpositionexample;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Service;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PixelFormat;
-import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.IBinder;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,8 +15,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-import com.example.superpositionexample.utilities.Utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,14 +30,12 @@ import java.util.Calendar;
 import java.util.Map;
 
 public class BubbleHeadService extends Service implements Runnable{
-    TimerPermissionV2 time;
+    private WindowManager mWindowManager;
+    private View mChatHeadView;
     Thread t;
     boolean running=true;
-    Class[] games={Game1.class,Juego2.class,Juego3.class,Game1.class};
-    int aux=0;
-    int timePerGame=10;
-    int actualExcerciceNum=0;
-    int totalGames=0;
+    TimerPersmission time;
+    File exerciceStatus;
 
     public BubbleHeadService() {
     }
@@ -58,97 +49,98 @@ public class BubbleHeadService extends Service implements Runnable{
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onCreate() {
-        super.onCreate();
-        //Crear DB
-        /*setExerciceNum();
-        updateExerciceNum(2);
-        aux=getExerciceNum();*/
-        aux=readDB();
+        //Archivo para checar status del juego
+        exerciceStatus =new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Android/data/com.example.superposition", "gameStatus.txt");
+        //Crear Archivo
+        createFile();
+
+        Toast.makeText(this, readFile(), Toast.LENGTH_SHORT).show();
 
         //Crear timer
-        time= new TimerPermissionV2();
-        time.setTimeLimit(timePerGame);
+        time= new TimerPersmission(5000,1000);//10s - 1s
         time.start();
 
+        super.onCreate();
         t= new Thread(this);
         t.start();
-        //Toast.makeText(this, "mames", Toast.LENGTH_SHORT).show();
 
-    }
-    public int readDB()
-    {
-        try
-        {
-            DbSQL conn= new DbSQL(this,"db_con",null,1);
-            SQLiteDatabase db = conn.getWritableDatabase();
 
-            Cursor row = db.rawQuery
-                    ("select * from config where id = 1 ",null);
+        mChatHeadView = LayoutInflater.from(this).inflate(R.layout.bubble_layout, null);
 
-            if(row.moveToFirst())
-            {
-               totalGames = Integer.valueOf( row.getString(1) );
-               timePerGame = Integer.valueOf( row.getString(2) );
-               actualExcerciceNum = Integer.valueOf( row.getString(4) );
+
+        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_PHONE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
+
+        params.gravity = Gravity.TOP | Gravity.LEFT;
+        params.x = 0;
+        params.y = 100;
+
+        mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        mWindowManager.addView(mChatHeadView, params);
+
+        /*ImageView closeButton = (ImageView) mChatHeadView.findViewById(R.id.close_btn);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopSelf();
             }
+        });*/
 
-            return 1;
-        }
-        catch(Exception e)
-        {
-            return 0;
-        }
-    }
-    public void updateExerciceNum(int num)
-    {
-        if(num>0)
-        {
-            DbSQL conn = new DbSQL(this, "db_config", null, 1);
-            SQLiteDatabase db = conn.getWritableDatabase();
+        ImageView chatHeadImage = (ImageView) mChatHeadView.findViewById(R.id.chat_head_profile_iv);
+        chatHeadImage.setOnTouchListener(new View.OnTouchListener() {
+            private int lastAction;
+            private int initialX;
+            private int initialY;
+            private float initialTouchX;
+            private float initialTouchY;
+            private static final int MAX_CLICK_DURATION = 200;
+            private long startClickTime;
 
-            String[] pram={"1"};
-            ContentValues values= new ContentValues();
-            values.put(Utils.FIELD_TOTALGAMESTOPLAY,num-1);
 
-            db.update(Utils.TABLE_CONFIG,values,Utils.FIELD_ID+"=?",pram);
-            db.close();
-        }
 
-    }
-    private void setExerciceNum()
-    {
-        DbSQL conn = new DbSQL(this, "db_config", null, 1);
-        SQLiteDatabase db = conn.getWritableDatabase();
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        startClickTime = Calendar.getInstance().getTimeInMillis();
+                        initialX = params.x;
+                        initialY = params.y;
 
-        String insert = "INSERT INTO "+ Utils.TABLE_CONFIG+" ( "+Utils.FIELD_ID+","+Utils.FIELD_TOTALGAMESTOPLAY+ ","+Utils.FIELD_TIME +") " +
-                "VALUES "+"("+1+","+2+","+5+")";
+                        initialTouchX = event.getRawX();
+                        initialTouchY = event.getRawY();
 
-        db.execSQL(insert);
-        db.close();
-    }
-    private int getExerciceNum()
-    {
-        DbSQL conn = new DbSQL(this, "db_config", null, 1);
-        SQLiteDatabase db = conn.getReadableDatabase();
+                        lastAction = event.getAction();
 
-        String[] pram={"1"};
-        String[] fields={Utils.FIELD_TOTALGAMESTOPLAY,Utils.FIELD_TOTALGAMESTOPLAY};
+                        return true;
+                    case MotionEvent.ACTION_UP:
 
-        try
-        {
-            Cursor cursor=db.query(Utils.TABLE_CONFIG, fields, Utils.FIELD_ID+"=?",pram,null,null,null);
-            cursor.moveToFirst();
-            //Toast.makeText(this, "cantidad de ejercicios :"+cursor.getString(0), Toast.LENGTH_LONG).show();
-            int result = cursor.getInt(0);
+                        long clickDuration = Calendar.getInstance().getTimeInMillis() - startClickTime;
+                        if(clickDuration < MAX_CLICK_DURATION){
+                           /* Intent intent = new Intent(BubbleHeadService.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
 
-            cursor.close();
-            return result;
-        }
-        catch(Exception e)
-        {
-            //Toast.makeText(this, "No se encontro campo id=1", Toast.LENGTH_LONG).show();
-            return 0;
-        }
+                            stopSelf();*/
+                            //goToHome();
+                        }
+                        lastAction = event.getAction();
+                        return true;
+                    case MotionEvent.ACTION_MOVE:
+                        params.x = initialX + (int) (event.getRawX() - initialTouchX);
+                        params.y = initialY + (int) (event.getRawY() - initialTouchY);
+
+                        mWindowManager.updateViewLayout(mChatHeadView, params);
+                        lastAction = event.getAction();
+                        return true;
+                }
+                return false;
+            }
+        });
+
     }
 
     public void goToHome()
@@ -189,69 +181,76 @@ public class BubbleHeadService extends Service implements Runnable{
     public void onDestroy() {
 
         super.onDestroy();
-
+        if (mChatHeadView != null) mWindowManager.removeView(mChatHeadView);
         startService(new Intent(BubbleHeadService.this, BlockService.class));
         Toast.makeText(this, "bloqueado", Toast.LENGTH_SHORT).show();
         running=false;
     }
 
+    public String readFile()
+    {
+        try {
+            BufferedReader file= new BufferedReader(new InputStreamReader( new FileInputStream(exerciceStatus)));
+            String checkResult= file.readLine();
+            file.close();
 
-   @Override
+            return checkResult;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "1";
+    }
+    public void createFile()
+    {
+        OutputStreamWriter fOut= null;
+        try {
+            fOut = new OutputStreamWriter(new FileOutputStream(exerciceStatus));
+            fOut.write("1");
+            fOut.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void run() {
 
-        while(running==true)
+        while(running=true)
         {
 
+
             try {
-                t.sleep(500);
-                if (actualExcerciceNum<=0)
+                if(time.getCount() && !(getActivity()+"").equals("superpositionexample"))
                 {
-                    time.setTimeLimit(timePerGame);
-                    time.restart();
-                    readDB();
-                    aux=totalGames;
-                    /*time.setTimeLimit(5);
-                    time.restart();
-                    updateExerciceNum(2);
-
-                    aux= getExerciceNum();*/
+                    Intent intent = new Intent(BubbleHeadService.this, Game1.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                 }
-                t.sleep(500);
-
-               // actualExcerciceNum= getExerciceNum();
-                readDB();
-                if(time.isTimeFinish() && aux==actualExcerciceNum && actualExcerciceNum>0)
-                {
-                    double b=Math.random();
-                    int a=(int) (b*4);
-                    if(a<4 && a>0)
-                    {
-                        Intent intent = new Intent(BubbleHeadService.this, games[a]);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        aux--;
-                    }
-
-                }
-
-            } catch (InterruptedException e) {
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (NoSuchFieldException e) {
                 e.printStackTrace();
             }
 
- /*           try {
+            try {
                 t.sleep(1500);
-
-                Intent intent = new Intent(BubbleHeadService.this, Game1.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-*/
+
         }
 
 
 
-   }
+    }
 }

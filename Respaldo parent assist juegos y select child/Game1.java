@@ -38,8 +38,8 @@ public class Game1 extends AppCompatActivity {
 
     public void check(View view)
     {
-        //int num=readDB();
-       // update(null,(num-1)+"",null,null);
+        int num=readDB();
+        update(null,(num-1)+"",null,null);
         /*int numExcercice=readExerciceNum();
         updateExerciceNum(numExcercice);*/
         //readExerciceNum();

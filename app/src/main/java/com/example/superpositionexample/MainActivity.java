@@ -86,6 +86,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void logIn(View view)
     {
+        Intent intent = new Intent(MainActivity.this, SelectChild.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        /*
         //checkDB();
         String usr=txtUsr.getText().toString();
         String pass=txtPass.getText().toString();
@@ -109,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                             Intent intent = new Intent(MainActivity.this, SelectChild.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
-                            finish();
+
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -119,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
                         // ...
                     }
-                });
+                });*/
 
     }
     public void insert()

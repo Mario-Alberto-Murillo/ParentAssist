@@ -5,48 +5,69 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.superpositionexample.utilities.Utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+public class Juego3 extends AppCompatActivity {
 
-public class Game1 extends AppCompatActivity {
-    File exerciceStatus;
+    public int ban1;
+    public int ban2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game1);
-        this.setTitle("Game 1");
-        //Toast.makeText(this, "holaprro", Toast.LENGTH_SHORT).show();
+        setContentView(R.layout.activity_juego3);
 
-
+        ban1=0;
+        ban2=0;
     }
 
-    public void check(View view)
-    {
-        //int num=readDB();
-       // update(null,(num-1)+"",null,null);
-        /*int numExcercice=readExerciceNum();
-        updateExerciceNum(numExcercice);*/
-        //readExerciceNum();
 
-
-        goToHome();
+    public void opcionIncorrecta(View view){
+        Toast.makeText(this,"Has escogido una opción incorrecta",Toast.LENGTH_LONG).show();
+        ban1=0;
+        ban2=0;
     }
+
+    public void opcionCorrecta1(View view){
+        Toast.makeText(this,"Correcto",Toast.LENGTH_LONG).show();
+        ban1=1;
+        if (ban2==1)
+        {
+            int num=readDB();
+            Toast.makeText(this,(num-1)+" restantes", Toast.LENGTH_SHORT).show();
+            update(null,(num-1)+"",null,null);
+           /* int numExcercice=readExerciceNum();
+            updateExerciceNum(numExcercice);*/
+            //readExerciceNum();
+            ban2=0;
+            ban1=0;
+            goToHome();
+        }
+    }
+
+    public void opcionCorrecta2(View view){
+        Toast.makeText(this,"Opcion acertada",Toast.LENGTH_LONG).show();
+        ban2=1;
+        if(ban1==1)
+        {
+            int num=readDB();
+            Toast.makeText(this,(num-1)+" restantes", Toast.LENGTH_SHORT).show();
+            update(null,(num-1)+"",null,null);
+           /* int numExcercice=readExerciceNum();
+            updateExerciceNum(numExcercice);*/
+            //readExerciceNum()
+            ban2=0;
+            ban1=0;
+            goToHome();
+        }
+    }
+
+
     public int readDB()
     {
         try
@@ -87,7 +108,6 @@ public class Game1 extends AppCompatActivity {
         db.close();
         Toast.makeText(this, "Configuracion actualizada", Toast.LENGTH_LONG).show();
     }
-
     public void updateExerciceNum(int num)
     {
         if(num>0)
@@ -121,7 +141,7 @@ public class Game1 extends AppCompatActivity {
             int result=cursor.getInt(0);
             cursor.close();
 
-           return result;
+            return result;
         }
         catch(Exception e)
         {
@@ -137,4 +157,6 @@ public class Game1 extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+
 }
+
