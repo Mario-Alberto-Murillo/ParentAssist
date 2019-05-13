@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         db.close();
-        Toast.makeText(this, "Todo bien todo correcto", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Todo bien todo correcto", Toast.LENGTH_LONG).show();
     }
     public int readDB()
     {
@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(MainActivity.this, "no se armo", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "no se armo", Toast.LENGTH_SHORT).show();
 
             }
         };
