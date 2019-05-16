@@ -118,7 +118,7 @@ public class SelectChild extends Activity {
                         Toast.makeText(SelectChild.this, "Tiempo: "+time, Toast.LENGTH_SHORT).show();
 
                         startService(new Intent(SelectChild.this, BubbleHeadService3.class));
-                        finish();
+                        goToHome();
                     }
                     else
                         Toast.makeText(SelectChild.this, "El nombre no coincide con los que se muestran", Toast.LENGTH_SHORT).show();
@@ -141,7 +141,13 @@ public class SelectChild extends Activity {
         ref.addValueEventListener(eventListener);
 
     }
-
+    public void goToHome()
+    {
+        Intent intent= new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
     public int readDB()
     {
         try
