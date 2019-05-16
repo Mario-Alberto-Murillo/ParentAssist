@@ -230,7 +230,7 @@ public class BubbleHeadService3 extends Service implements Runnable{
                     int a=(int) (b*4);
                     if(a<4 && a>0)
                     {
-                        Intent intent = new Intent(BubbleHeadService3.this, Game1.class);
+                        Intent intent = new Intent(BubbleHeadService3.this, games[a]);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         //aux--;
