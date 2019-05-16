@@ -91,7 +91,7 @@ public class SelectChild extends Activity {
     }*/
     public void selectChild (View view)
     {
-        startService(new Intent(SelectChild.this, BubbleHeadService.class));
+        startService(new Intent(SelectChild.this, BubbleHeadService3.class));
         finish();
 
         //enlazar el boton y obtener el texto del label para buscar si existe el morro o no
