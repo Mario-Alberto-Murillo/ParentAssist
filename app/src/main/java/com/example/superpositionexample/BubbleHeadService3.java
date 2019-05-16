@@ -63,7 +63,7 @@ public class BubbleHeadService3 extends Service implements Runnable{
         updateExerciceNum(2);
         aux=getExerciceNum();*/
         aux=readDB();
-
+        Toast.makeText(this,timePerGame+"-"+totalGames , Toast.LENGTH_SHORT).show();
         //Crear timer
         time= new TimerPermissionV2();
         time.setTimeLimit(timePerGame);
@@ -89,9 +89,10 @@ public class BubbleHeadService3 extends Service implements Runnable{
                 totalGames = Integer.valueOf( row.getString(1) );
                 timePerGame = Integer.valueOf( row.getString(2) );
                 actualExcerciceNum = Integer.valueOf( row.getString(4) );
+
             }
 
-            return 1;
+            return actualExcerciceNum;
         }
         catch(Exception e)
         {
@@ -200,8 +201,47 @@ public class BubbleHeadService3 extends Service implements Runnable{
 
         while(running==true)
         {
+            try {
+                t.sleep(500);
+                if (actualExcerciceNum<=0)
+                {
+                    time.setTimeLimit(timePerGame);
+                    time.restart();
+                    readDB();
+                    aux=actualExcerciceNum;
+                    /*time.setTimeLimit(5);
+                    time.restart();
+                    updateExerciceNum(2);
 
+                    aux= getExerciceNum();*/
+                }
+                t.sleep(500);
 
+                // actualExcerciceNum= getExerciceNum();
+                readDB();
+
+                if(aux!=actualExcerciceNum)
+                {
+                    aux--;
+                }
+                else if(time.isTimeFinish() && aux==actualExcerciceNum && actualExcerciceNum>0)
+                {
+                    double b=Math.random();
+                    int a=(int) (b*4);
+                    if(a<4 && a>0)
+                    {
+                        Intent intent = new Intent(BubbleHeadService3.this, Game1.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        //aux--;
+                    }
+
+                }
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+/*
            try {
                 t.sleep(1500);
 
@@ -211,7 +251,7 @@ public class BubbleHeadService3 extends Service implements Runnable{
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
+            }*/
 
         }
 

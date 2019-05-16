@@ -91,16 +91,16 @@ public class SelectChild extends Activity {
     }*/
     public void selectChild (View view)
     {
-        startService(new Intent(SelectChild.this, BubbleHeadService3.class));
-        finish();
+        /*startService(new Intent(SelectChild.this, BubbleHeadService3.class));
+        finish();*/
 
         //enlazar el boton y obtener el texto del label para buscar si existe el morro o no
-        /*eventListener = new ValueEventListener() {
+        eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 try {
                     Boolean chidExist= dataSnapshot.child(user).child("Hijos").child(txtChildSelected.getText().toString()).exists();
-                    String time="7", ejercicios="3";
+                    String time="13", ejercicios="13";
 
                     if(chidExist)
                     {
@@ -117,7 +117,7 @@ public class SelectChild extends Activity {
                         }
                         Toast.makeText(SelectChild.this, "Tiempo: "+time, Toast.LENGTH_SHORT).show();
 
-                        startService(new Intent(SelectChild.this, BubbleHeadService.class));
+                        startService(new Intent(SelectChild.this, BubbleHeadService3.class));
                         finish();
                     }
                     else
@@ -139,7 +139,7 @@ public class SelectChild extends Activity {
 
         };
         ref.addValueEventListener(eventListener);
-        */
+
     }
 
     public int readDB()
