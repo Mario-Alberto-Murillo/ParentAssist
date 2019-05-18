@@ -5,50 +5,40 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.superpositionexample.utilities.Utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-
-public class Game1 extends AppCompatActivity {
-    File exerciceStatus;
+public class Juego2 extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game1);
-        this.setTitle("Game 1");
-        //Toast.makeText(this, "holaprro", Toast.LENGTH_SHORT).show();
-
-
+        setContentView(R.layout.activity_juego2);
     }
 
-    public void check(View view)
-    {
-        //int num=readDB();
-       // update(null,(num-1)+"",null,null);
-        /*int numExcercice=readExerciceNum();
-        updateExerciceNum(numExcercice);*/
-        //readExerciceNum();
+    public void par (View view){
+        Toast.makeText(this, "Par es un 2",Toast.LENGTH_LONG).show();
+    }
+
+    public void tercia (View view){
+        Toast.makeText(this, "Tercia es un 3",Toast.LENGTH_LONG).show();
+    }
+
+    public void mediaDocenta (View view){
+        Toast.makeText(this, "Media Docena es un 6",Toast.LENGTH_LONG).show();
 
         int num=readDB();
         Toast.makeText(this,(num-1)+" restantes", Toast.LENGTH_SHORT).show();
         update(null,(num-1)+"",null,null);
-
+        /*int numExcercice=readExerciceNum();
+        updateExerciceNum(numExcercice);*/
+        //readExerciceNum();
         goToHome();
+
     }
     public int readDB()
     {
@@ -97,4 +87,6 @@ public class Game1 extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+
+
 }

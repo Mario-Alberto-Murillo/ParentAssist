@@ -1,6 +1,5 @@
 package com.example.superpositionexample;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,7 +10,6 @@ import android.os.Build;
 import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,10 +31,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
-
 public class MainActivity extends AppCompatActivity {
 
     private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
@@ -55,29 +49,16 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseDatabase database= FirebaseDatabase.getInstance();
     DatabaseReference ref = database.getReference("a");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // Initialize Firebase Auth
-        setTitle("Configurar");
         mAuth = FirebaseAuth.getInstance();
         txtUsr= findViewById(R.id.txtUrs);
         txtPass= findViewById(R.id.txtPass);
 
-        try {
-            Toast.makeText(this, getActivity()+"",Toast.LENGTH_SHORT).show();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
         //Database
         //insert();
         //update();
@@ -93,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         db.close();
         Toast.makeText(this, "Insert", Toast.LENGTH_LONG).show();*/
 
-        insert();
+        //insert();
         if(readDB()==0)
         {
             insert();
@@ -105,10 +86,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void logIn(View view)
     {
-        /*Intent intent = new Intent(MainActivity.this, SelectChild.class);
+        Intent intent = new Intent(MainActivity.this, SelectChild.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-        */
+        /*
         //checkDB();
         String usr=txtUsr.getText().toString();
         String pass=txtPass.getText().toString();
@@ -132,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
                             Intent intent = new Intent(MainActivity.this, SelectChild.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
-                            finish();
 
 
                         } else {
@@ -143,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
                         // ...
                     }
-                });
+                });*/
 
     }
     public void insert()
@@ -189,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         db.close();
-        //Toast.makeText(this, "Todo bien todo correcto", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Todo bien todo correcto", Toast.LENGTH_LONG).show();
     }
     public int readDB()
     {
@@ -213,32 +193,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-    }
-    @Nullable
-    public static Activity getActivity() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, NoSuchFieldException {
-
-        Class activityThreadClass = Class.forName("android.app.ActivityThread");
-        Object activityThread = activityThreadClass.getMethod("currentActivityThread").invoke(null);
-        Field activitiesField = activityThreadClass.getDeclaredField("mActivities");
-        activitiesField.setAccessible(true);
-
-        Map<Object, Object> activities = (Map<Object, Object>) activitiesField.get(activityThread);
-        if (activities == null)
-            return null;
-
-        for (Object activityRecord : activities.values()) {
-            Class activityRecordClass = activityRecord.getClass();
-            Field pausedField = activityRecordClass.getDeclaredField("paused");
-            pausedField.setAccessible(true);
-            if (!pausedField.getBoolean(activityRecord)) {
-                Field activityField = activityRecordClass.getDeclaredField("activity");
-                activityField.setAccessible(true);
-                Activity activity = (Activity) activityField.get(activityRecord);
-                return activity;
-            }
-        }
-
-        return null;
     }
     public void updateExerciceNum(int num)
     {
@@ -309,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                //Toast.makeText(MainActivity.this, "no se armo", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "no se armo", Toast.LENGTH_SHORT).show();
 
             }
         };

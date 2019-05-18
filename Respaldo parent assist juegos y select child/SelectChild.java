@@ -60,7 +60,7 @@ public class SelectChild extends Activity {
 
         txtChildinfo= findViewById(R.id.ChildInfo);
         txtChildSelected= findViewById(R.id.inChildName);
-        setTitle("Configurar");
+
         //firebase DB
         //Toast.makeText(this, new GetUserSQLite().getUsr(), Toast.LENGTH_SHORT).show();
 
@@ -69,7 +69,7 @@ public class SelectChild extends Activity {
 
         checkDB();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
 
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                     Uri.parse("package:" + getPackageName()));
@@ -91,17 +91,14 @@ public class SelectChild extends Activity {
     }*/
     public void selectChild (View view)
     {
-        /*startService(new Intent(SelectChild.this, BubbleHeadService3.class));
-        finish();*/
-
         //enlazar el boton y obtener el texto del label para buscar si existe el morro o no
         eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 try {
                     Boolean chidExist= dataSnapshot.child(user).child("Hijos").child(txtChildSelected.getText().toString()).exists();
-                    String time="13", ejercicios="13";
-
+                    String time="7", ejercicios="3";
+                    
                     if(chidExist)
                     {
                         try
@@ -117,12 +114,12 @@ public class SelectChild extends Activity {
                         }
                         Toast.makeText(SelectChild.this, "Tiempo: "+time, Toast.LENGTH_SHORT).show();
 
-                        startService(new Intent(SelectChild.this, BubbleHeadService3.class));
-                        goToHome();
+                        startService(new Intent(SelectChild.this, BubbleHeadService.class));
+                        finish();
                     }
                     else
                         Toast.makeText(SelectChild.this, "El nombre no coincide con los que se muestran", Toast.LENGTH_SHORT).show();
-
+                    
                 }
                 catch (Exception a)
                 {
@@ -139,15 +136,8 @@ public class SelectChild extends Activity {
 
         };
         ref.addValueEventListener(eventListener);
+    }
 
-    }
-    public void goToHome()
-    {
-        Intent intent= new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
     public int readDB()
     {
         try

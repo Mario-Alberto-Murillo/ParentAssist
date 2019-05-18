@@ -32,7 +32,7 @@
             android:enabled="true"
             android:exported="false" />
         <service
-            android:name=".BlockService"
+            android:name=".BubbleHeadService3"
             android:enabled="true"
             android:exported="false" />
     </application>

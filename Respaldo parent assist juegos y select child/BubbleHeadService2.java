@@ -29,7 +29,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Calendar;
 import java.util.Map;
 
-public class BubbleHeadService extends Service implements Runnable{
+public class BubbleHeadService2 extends Service implements Runnable{
     private WindowManager mWindowManager;
     private View mChatHeadView;
     Thread t;
@@ -37,7 +37,7 @@ public class BubbleHeadService extends Service implements Runnable{
     TimerPersmission time;
     File exerciceStatus;
 
-    public BubbleHeadService() {
+    public BubbleHeadService2() {
     }
 
     @Override
@@ -182,7 +182,7 @@ public class BubbleHeadService extends Service implements Runnable{
 
         super.onDestroy();
         if (mChatHeadView != null) mWindowManager.removeView(mChatHeadView);
-        startService(new Intent(BubbleHeadService.this, BlockService.class));
+        startService(new Intent(BubbleHeadService2.this, BlockService.class));
         Toast.makeText(this, "bloqueado", Toast.LENGTH_SHORT).show();
         running=false;
     }
@@ -226,7 +226,7 @@ public class BubbleHeadService extends Service implements Runnable{
             try {
                 if(time.getCount() && !(getActivity()+"").equals("superpositionexample"))
                 {
-                    Intent intent = new Intent(BubbleHeadService.this, Game1.class);
+                    Intent intent = new Intent(BubbleHeadService2.this, Game1.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 }
