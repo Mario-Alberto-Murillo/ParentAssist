@@ -60,7 +60,7 @@ public class SelectChild extends Activity {
 
         txtChildinfo= findViewById(R.id.ChildInfo);
         txtChildSelected= findViewById(R.id.inChildName);
-
+        setTitle("Configurar");
         //firebase DB
         //Toast.makeText(this, new GetUserSQLite().getUsr(), Toast.LENGTH_SHORT).show();
 

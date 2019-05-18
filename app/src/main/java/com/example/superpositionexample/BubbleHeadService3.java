@@ -220,11 +220,11 @@ public class BubbleHeadService3 extends Service implements Runnable{
                 // actualExcerciceNum= getExerciceNum();
                 readDB();
 
-                if(aux!=actualExcerciceNum)
+                /*if(aux!=actualExcerciceNum)
                 {
                     aux--;
-                }
-                else if(time.isTimeFinish() && aux==actualExcerciceNum && actualExcerciceNum>0)
+                }*/
+                if(time.isTimeFinish() && aux==actualExcerciceNum && actualExcerciceNum>0)
                 {
                     double b=Math.random();
                     int a=(int) (b*4);
@@ -233,7 +233,7 @@ public class BubbleHeadService3 extends Service implements Runnable{
                         Intent intent = new Intent(BubbleHeadService3.this, games[a]);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                        //aux--;
+                        aux--;
                     }
 
                 }
