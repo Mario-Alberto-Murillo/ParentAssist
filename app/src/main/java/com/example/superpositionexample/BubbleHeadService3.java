@@ -2,7 +2,9 @@ package com.example.superpositionexample;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,6 +15,7 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -34,6 +37,7 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 
 public class BubbleHeadService3 extends Service implements Runnable{
@@ -183,6 +187,15 @@ public class BubbleHeadService3 extends Service implements Runnable{
         }
 
         return null;
+    }
+    public String getPackage()
+    {
+        ActivityManager am = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
+        Log.d("topActivity", "CURRENT Activity ::" + taskInfo.get(0).topActivity.getClassName());
+        ComponentName componentInfo = taskInfo.get(0).topActivity;
+
+        return componentInfo.getPackageName();
     }
 
     @Override
