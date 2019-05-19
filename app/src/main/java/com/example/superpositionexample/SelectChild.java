@@ -100,7 +100,7 @@ public class SelectChild extends Activity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 try {
                     Boolean chidExist= dataSnapshot.child(user).child("Hijos").child(txtChildSelected.getText().toString()).exists();
-                    String time="13", ejercicios="13";
+                    String time="15", ejercicios="2";
 
                     if(chidExist)
                     {

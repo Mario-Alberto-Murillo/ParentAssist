@@ -8,6 +8,7 @@ import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PixelFormat;
 import android.os.CountDownTimer;
@@ -77,6 +78,24 @@ public class BubbleHeadService3 extends Service implements Runnable{
         t.start();
         //Toast.makeText(this, "mames", Toast.LENGTH_SHORT).show();
 
+    }
+    public void update(String id, String games, String time, String user)
+    {
+        DbSQL conn= new DbSQL(this,"db_con",null,1);
+        SQLiteDatabase db = conn.getWritableDatabase();
+
+        ContentValues content = new ContentValues();
+        content.put("remainGames",games);
+
+        try {
+            db.update("config",content,"id=1",null);
+        }catch (SQLException sqle)
+        {
+            Toast.makeText(this, "No se pudo ingresar el campo", Toast.LENGTH_SHORT).show();
+        }
+
+        db.close();
+        //Toast.makeText(this, "Configuracion actualizada", Toast.LENGTH_LONG).show();
     }
     public int readDB()
     {
@@ -220,8 +239,9 @@ public class BubbleHeadService3 extends Service implements Runnable{
                 {
                     time.setTimeLimit(timePerGame);
                     time.restart();
-                    readDB();
-                    aux=actualExcerciceNum;
+                    //readDB();
+                    update(null,totalGames+"",null,null);
+                    actualExcerciceNum=totalGames;
                     /*time.setTimeLimit(5);
                     time.restart();
                     updateExerciceNum(2);
@@ -237,7 +257,7 @@ public class BubbleHeadService3 extends Service implements Runnable{
                 {
                     aux--;
                 }*/
-                if(time.isTimeFinish() && aux==actualExcerciceNum && actualExcerciceNum>0)
+                if(time.isTimeFinish() && !getPackage().contains("superposition") && actualExcerciceNum>0)
                 {
                     double b=Math.random();
                     int a=(int) (b*4);
@@ -246,7 +266,7 @@ public class BubbleHeadService3 extends Service implements Runnable{
                         Intent intent = new Intent(BubbleHeadService3.this, games[a]);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                        aux--;
+                        //aux--;
                     }
 
                 }

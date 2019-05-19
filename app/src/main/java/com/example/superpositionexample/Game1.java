@@ -88,7 +88,7 @@ public class Game1 extends AppCompatActivity {
         }
 
         db.close();
-        Toast.makeText(this, "Configuracion actualizada", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Configuracion actualizada", Toast.LENGTH_LONG).show();
     }
     public void goToHome()
     {
