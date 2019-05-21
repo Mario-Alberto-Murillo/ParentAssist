@@ -2,10 +2,13 @@ package com.example.superpositionexample;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PixelFormat;
 import android.os.CountDownTimer;
@@ -13,6 +16,7 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -34,6 +38,7 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 
 public class BubbleHeadService3 extends Service implements Runnable{
@@ -73,6 +78,24 @@ public class BubbleHeadService3 extends Service implements Runnable{
         t.start();
         //Toast.makeText(this, "mames", Toast.LENGTH_SHORT).show();
 
+    }
+    public void update(String id, String games, String time, String user)
+    {
+        DbSQL conn= new DbSQL(this,"db_con",null,1);
+        SQLiteDatabase db = conn.getWritableDatabase();
+
+        ContentValues content = new ContentValues();
+        content.put("remainGames",games);
+
+        try {
+            db.update("config",content,"id=1",null);
+        }catch (SQLException sqle)
+        {
+            Toast.makeText(this, "No se pudo ingresar el campo", Toast.LENGTH_SHORT).show();
+        }
+
+        db.close();
+        //Toast.makeText(this, "Configuracion actualizada", Toast.LENGTH_LONG).show();
     }
     public int readDB()
     {
@@ -184,6 +207,15 @@ public class BubbleHeadService3 extends Service implements Runnable{
 
         return null;
     }
+    public String getPackage()
+    {
+        ActivityManager am = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
+        Log.d("topActivity", "CURRENT Activity ::" + taskInfo.get(0).topActivity.getClassName());
+        ComponentName componentInfo = taskInfo.get(0).topActivity;
+
+        return componentInfo.getPackageName();
+    }
 
     @Override
     public void onDestroy() {
@@ -207,8 +239,9 @@ public class BubbleHeadService3 extends Service implements Runnable{
                 {
                     time.setTimeLimit(timePerGame);
                     time.restart();
-                    readDB();
-                    aux=actualExcerciceNum;
+                    //readDB();
+                    update(null,totalGames+"",null,null);
+                    actualExcerciceNum=totalGames;
                     /*time.setTimeLimit(5);
                     time.restart();
                     updateExerciceNum(2);
@@ -224,7 +257,7 @@ public class BubbleHeadService3 extends Service implements Runnable{
                 {
                     aux--;
                 }*/
-                if(time.isTimeFinish() && aux==actualExcerciceNum && actualExcerciceNum>0)
+                if(time.isTimeFinish() && !getPackage().contains("superposition") && actualExcerciceNum>0)
                 {
                     double b=Math.random();
                     int a=(int) (b*4);
@@ -233,7 +266,7 @@ public class BubbleHeadService3 extends Service implements Runnable{
                         Intent intent = new Intent(BubbleHeadService3.this, games[a]);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                        aux--;
+                        //aux--;
                     }
 
                 }
